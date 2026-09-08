@@ -2,14 +2,13 @@
 #include <SDL3_mixer/SDL_mixer.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "config.h"
+#include "../config.h"
 
 int main(void)
 {
     // Variables
     bool running = true;
     SDL_Event event;
-
 
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("SDL_Init failed: %s", SDL_GetError());
@@ -21,11 +20,12 @@ int main(void)
         SDL_Quit();
         return 1;
     }
-    
+
+    // Create audio mixer thing
     MIX_Mixer *mixer = MIX_CreateMixerDevice(
-            SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK,
-            NULL
-    ); // Create audio mixer
+        SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK,
+        NULL
+    );
 
     // Check if mixer isn't working
     if (mixer == NULL) {
@@ -35,8 +35,7 @@ int main(void)
         return 1;
     }
 
-    
-    // Creates a window
+    // Create a window
     SDL_Window *window = SDL_CreateWindow(
         "ojace8143's music player",
         800,
@@ -44,33 +43,70 @@ int main(void)
         0
     );
 
-    MIX_Track *button_track = MIX_CreateTrack(mixer);
-
-    // creates renderer
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
-
-    // Checks if the renderer failed
-    if (renderer == NULL) {
-        SDL_Log("SDL_CreateRenderer failed: %s", SDL_GetError());
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 1;
-    }
-
-
-    // Check button track error yada yada of course 
-    if (button_track == NULL) {
-        SDL_Log("MIX_CreateTrack failed: %s", SDL_GetError());
-        MIX_DestroyAudio(button_sound);
-        Mix_DestroyMixer(mixer);
+    // Check if the window failed
+    if (window == NULL) {
+        SDL_Log("SDL_CreateWindow failed: %s", SDL_GetError());
+        MIX_DestroyMixer(mixer);
         MIX_Quit();
         SDL_Quit();
         return 1;
     }
 
-    // Checks if the window failed or not
-    if (window == NULL) {
-        SDL_Log("SDL_CreateWindow failed: %s", SDL_GetError());
+    // Create renderer
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
+
+    // Check if the renderer failed
+    if (renderer == NULL) {
+        SDL_Log("SDL_CreateRenderer failed: %s", SDL_GetError());
+        SDL_DestroyWindow(window);
+        MIX_DestroyMixer(mixer);
+        MIX_Quit();
+        SDL_Quit();
+        return 1;
+    }
+
+    // Create a track for the button
+    MIX_Track *button_track = MIX_CreateTrack(mixer);
+
+    // Check button track error
+    if (button_track == NULL) {
+        SDL_Log("MIX_CreateTrack failed: %s", SDL_GetError());
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        MIX_DestroyMixer(mixer);
+        MIX_Quit();
+        SDL_Quit();
+        return 1;
+    }
+
+    // Load the goofy button sound
+    MIX_Audio *button_sound = MIX_LoadAudio(
+        mixer,
+        "assets/goofy-sound-effects.mp3",
+        true
+    );
+
+    // Check if the button sound loaded
+    if (button_sound == NULL) {
+        SDL_Log("MIX_LoadAudio failed: %s", SDL_GetError());
+        MIX_DestroyTrack(button_track);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        MIX_DestroyMixer(mixer);
+        MIX_Quit();
+        SDL_Quit();
+        return 1;
+    }
+
+    // Connect the sound to the track
+    if (!MIX_SetTrackAudio(button_track, button_sound)) {
+        SDL_Log("MIX_SetTrackAudio failed: %s", SDL_GetError());
+        MIX_DestroyAudio(button_sound);
+        MIX_DestroyTrack(button_track);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        MIX_DestroyMixer(mixer);
+        MIX_Quit();
         SDL_Quit();
         return 1;
     }
@@ -86,26 +122,29 @@ int main(void)
     // Sets window title
     SDL_SetWindowTitle(window, "ojace8143's music player");
 
-    MIX_Audio *button_sound = MIX_LoadAudio(mixer, "assets/button.mp3", true); // set button sound to be the goofy noises
-
+    // Main loop
     while (running) {
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Sets color R,G,B,A
-        SDL_RenderClear(renderer); // Clears the "renderer"
+        // Set background to black
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
 
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // Set color again
-        SDL_RenderFillRect(renderer, &button); // Draw the button, takes the pointer to the button created earlier
+        // Set button to white
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderFillRect(renderer, &button);
 
         SDL_RenderPresent(renderer);
 
         // Event loop
         while (SDL_PollEvent(&event)) {
+
             if (event.type == SDL_EVENT_QUIT) {
                 running = false;
             }
 
             if (event.type == SDL_EVENT_KEY_DOWN) {
                 printf("a key was pressed wow so impressive\n");
+
                 if (event.key.key == SDLK_ESCAPE) {
                     running = false;
                 }
@@ -113,28 +152,36 @@ int main(void)
                 if (event.key.key == SDLK_SPACE) {
                     printf("you pressed space nice job lil bro\n");
                 }
-
             }
 
             if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-                float x = event.button.x; // Takes the x position of the "event"
-                float y = event.button.y;  // Takes the y position of the "event"
-                
-                if ( x >= button.x &&                  // if block checks if the cursor is in the button's width or height, if so then printf
-                     x <= button.x + button.w &&
-                     y >= button.y &&
-                     y <= button.y + button.h) {
+                float x = event.button.x;
+                float y = event.button.y;
+
+                // Check if the cursor is inside the button
+                if (x >= button.x &&
+                    x <= button.x + button.w &&
+                    y >= button.y &&
+                    y <= button.y + button.h) {
+
                     printf("you clicked the button nice job\n");
+
+                    // Play the goofy sound
+                    MIX_PlayTrack(button_track, 0);
                 }
-            } 
+            }
         }
     }
 
+    // Cleanup
+    MIX_DestroyTrack(button_track);
+    MIX_DestroyAudio(button_sound);
+    MIX_DestroyMixer(mixer);
     MIX_Quit();
 
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 
     return 0;
-
 }

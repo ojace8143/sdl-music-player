@@ -7,7 +7,7 @@ just for personal use so I (and you) don't have to deal with online services lik
 - [x] Get a window
 - [x] Event handler
 - [x] Clickable button
-- [ ] Audio
+- [x] Audio with button
 - [ ] Multiple buttons
 - [ ] Create basic UI
 - [ ] add more stuff todo later
