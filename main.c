@@ -15,9 +15,6 @@ int main(void)
         return 1;
     }
 
-    // Creates a renderer
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
-
     // Creates a window
     SDL_Window *window = SDL_CreateWindow(
         "ojace8143's music player",
@@ -25,6 +22,9 @@ int main(void)
         600,
         0
     );
+
+    // creates renderer
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
 
     // Checks if the renderer failed
     if (renderer == NULL) {
@@ -54,8 +54,13 @@ int main(void)
 
     while (running) {
 
-        // Clears the "renderer"
-        SDL_SetRenderClear(renderer);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Sets color R,G,B,A
+        SDL_RenderClear(renderer); // Clears the "renderer"
+
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // Set color again
+        SDL_RenderFillRect(renderer, &button); // Draw the button, takes the pointer to the button created earlier
+
+        SDL_RenderPresent(renderer);
 
         // Event loop
         while (SDL_PollEvent(&event)) {
