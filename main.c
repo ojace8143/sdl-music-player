@@ -67,18 +67,31 @@ int main(void)
             if (event.type == SDL_EVENT_QUIT) {
                 running = false;
             }
+
             if (event.type == SDL_EVENT_KEY_DOWN) {
                 printf("a key was pressed wow so impressive\n");
                 if (event.key.key == SDLK_ESCAPE) {
                     running = false;
                 }
+
                 if (event.key.key == SDLK_SPACE) {
                     printf("you pressed space nice job lil bro\n");
                 }
-            }
-        }
 
-        
+            }
+
+            if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+                float x = event.button.x; // Takes the x position of the "event"
+                float y = event.button.y;  // Takes the y position of the "event"
+                
+                if ( x >= button.x &&                  // if block checks if the cursor is in the button's width or height, if so then printf
+                     x <= button.x + button.w &&
+                     y >= button.y &&
+                     y <= button.y + button.h) {
+                    printf("you clicked the button nice job\n");
+                }
+            } 
+        }
     }
 
     SDL_DestroyWindow(window);
