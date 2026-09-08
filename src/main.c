@@ -1,4 +1,5 @@
 #include <SDL3/SDL.h>
+#include <SDL3_mixer/SDL_mixer.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include "config.h"
@@ -15,6 +16,26 @@ int main(void)
         return 1;
     }
 
+    if (!MIX_Init()) {
+        SDL_Log("MIX_Init failed: %s", SDL_GetError());
+        SDL_Quit();
+        return 1;
+    }
+    
+    MIX_Mixer *mixer = MIX_CreateMixerDevice(
+            SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK,
+            NULL
+    ); // Create audio mixer
+
+    // Check if mixer isn't working
+    if (mixer == NULL) {
+        SDL_Log("MIX_CreateMixerDevice failed: %s", SDL_GetError());
+        MIX_Quit();
+        SDL_Quit();
+        return 1;
+    }
+
+    
     // Creates a window
     SDL_Window *window = SDL_CreateWindow(
         "ojace8143's music player",
@@ -23,6 +44,8 @@ int main(void)
         0
     );
 
+    MIX_Track *button_track = MIX_CreateTrack(mixer);
+
     // creates renderer
     SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
 
@@ -30,6 +53,17 @@ int main(void)
     if (renderer == NULL) {
         SDL_Log("SDL_CreateRenderer failed: %s", SDL_GetError());
         SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
+
+
+    // Check button track error yada yada of course 
+    if (button_track == NULL) {
+        SDL_Log("MIX_CreateTrack failed: %s", SDL_GetError());
+        MIX_DestroyAudio(button_sound);
+        Mix_DestroyMixer(mixer);
+        MIX_Quit();
         SDL_Quit();
         return 1;
     }
@@ -51,6 +85,8 @@ int main(void)
 
     // Sets window title
     SDL_SetWindowTitle(window, "ojace8143's music player");
+
+    MIX_Audio *button_sound = MIX_LoadAudio(mixer, "assets/button.mp3", true); // set button sound to be the goofy noises
 
     while (running) {
 
@@ -93,6 +129,8 @@ int main(void)
             } 
         }
     }
+
+    MIX_Quit();
 
     SDL_DestroyWindow(window);
     SDL_Quit();
