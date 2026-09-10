@@ -8,8 +8,10 @@ just for personal use so I (and you) don't have to deal with online services lik
 - [x] Event handler
 - [x] Clickable button
 - [x] Audio with button
-- [ ] Multiple buttons
+- [x] Multiple buttons
 - [ ] Create basic UI
+- [ ] Create UI Assets
+- [ ] Functionality
 - [ ] add more stuff todo later
 
 ## Notes

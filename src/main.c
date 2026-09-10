@@ -192,7 +192,7 @@ int main(void)
                 if (x >= next_button.x &&
                     x <= next_button.x + next_button.w &&
                     y >= next_button.y &&
-                    y >= next_button.y + next_button.h) {
+                    y <= next_button.y + next_button.h) {
 
                     printf("you clicked on the next button nice job\n");
                 }
