@@ -111,12 +111,20 @@ int main(void)
         return 1;
     }
 
-    // Define a button "button"
+    // Define a button
+    // Screen is 800x200 (note)
     SDL_FRect play_pause_button = {
-        .x = 200,
-        .y = 100,
-        .w = 200,
-        .h = 100
+        .x = (600 - 50) / 2,
+        .y = (200 - 50) / 1.2,
+        .w = 50,
+        .h = 50
+    };
+
+    SDL_FRect next_button = {
+        .x = (600 - 35) / 1.2,
+        .y = (200 - 35) / 1.2,
+        .w = 35,
+        .h = 35
     };
 
     // Sets window title
@@ -132,6 +140,7 @@ int main(void)
         // Set button to white
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(renderer, &play_pause_button);
+        SDL_RenderFillRect(renderer, &next_button);
 
         SDL_RenderPresent(renderer);
 
