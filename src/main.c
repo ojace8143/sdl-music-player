@@ -38,8 +38,8 @@ int main(void)
     // Create a window
     SDL_Window *window = SDL_CreateWindow(
         "ojace8143's music player",
-        800,
         600,
+        200,
         0
     );
 
@@ -112,9 +112,9 @@ int main(void)
     }
 
     // Define a button "button"
-    SDL_FRect button = {
-        .x = 300,
-        .y = 250,
+    SDL_FRect play_pause_button = {
+        .x = 200,
+        .y = 100,
         .w = 200,
         .h = 100
     };
@@ -131,7 +131,7 @@ int main(void)
 
         // Set button to white
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderFillRect(renderer, &button);
+        SDL_RenderFillRect(renderer, &play_pause_button);
 
         SDL_RenderPresent(renderer);
 
@@ -159,10 +159,10 @@ int main(void)
                 float y = event.button.y;
 
                 // Check if the cursor is inside the button
-                if (x >= button.x &&
-                    x <= button.x + button.w &&
-                    y >= button.y &&
-                    y <= button.y + button.h) {
+                if (x >= play_pause_button.x &&
+                    x <= play_pause_button.x + play_pause_button.w &&
+                    y >= play_pause_button.y &&
+                    y <= play_pause_button.y + play_pause_button.h) {
 
                     printf("you clicked the button nice job\n");
 
