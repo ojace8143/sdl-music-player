@@ -111,22 +111,31 @@ int main(void)
         return 1;
     }
 
+
+    int button_center = 150; // y value that buttons will be centered on
+
     // Define a button
     // Screen is 800x200 (note)
     SDL_FRect play_pause_button = {
         .x = (600 - 50) / 2,
-        .y = (200 - 50) / 1.2,
+        .y = button_center - 50 / 2,
         .w = 50,
         .h = 50
     };
 
     SDL_FRect next_button = {
-        .x = (600 - 35) / 1.2,
-        .y = (200 - 35) / 1.2,
+        .x = play_pause_button.x + play_pause_button.w + 10, 
+        .y = button_center - 35 / 2,
         .w = 35,
         .h = 35
     };
 
+    SDL_FRect previous_button = {
+        .x = play_pause_button.x - play_pause_button.w - 10,
+        .y = button_center - 35 / 2,
+        .w = 35,
+        .h = 35
+    };
     // Sets window title
     SDL_SetWindowTitle(window, "ojace8143's music player");
 
@@ -141,6 +150,7 @@ int main(void)
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(renderer, &play_pause_button);
         SDL_RenderFillRect(renderer, &next_button);
+        SDL_RenderFillRect(renderer, &previous_button);
 
         SDL_RenderPresent(renderer);
 
