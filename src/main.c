@@ -183,10 +183,25 @@ int main(void)
                     y >= play_pause_button.y &&
                     y <= play_pause_button.y + play_pause_button.h) {
 
-                    printf("you clicked the button nice job\n");
+                    printf("you clicked the play pause button nice job\n");
 
                     // Play the goofy sound
+                    // will soon be to toggle current sound
                     MIX_PlayTrack(button_track, 0);
+                }
+                if (x >= next_button.x &&
+                    x <= next_button.x + next_button.w &&
+                    y >= next_button.y &&
+                    y >= next_button.y + next_button.h) {
+
+                    printf("you clicked on the next button nice job\n");
+                }
+                if (x >= previous_button.x &&
+                    x <= previous_button.x + previous_button.w &&
+                    y >= previous_button.y &&
+                    y <= previous_button.y + previous_button.h) {
+
+                    printf("you clicked on the previous button nice job\n");
                 }
             }
         }
