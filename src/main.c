@@ -131,7 +131,7 @@ int main(void)
     };
 
     SDL_FRect previous_button = {
-        .x = play_pause_button.x - 50 - 10,
+        .x = play_pause_button.x - 35 - 10,
         .y = button_center - 35 / 2,
         .w = 35,
         .h = 35
