@@ -14,6 +14,9 @@ just for personal use so I (and you) don't have to deal with online services lik
 - [ ] Functionality
 - [ ] add more stuff todo later
 
+## Currently working on
+functionality. my dad also has an old tool cd (10,000 days), so i'm using that as the testing audio tracks.
+
 ## Notes
 woah sdl so cool
 
