@@ -6,11 +6,26 @@
 
 int main(void)
 {
-        if (!SDL_Init(SDL_INIT_VIDEO)) {
+    // Variables
+    bool running = true;
+    SDL_Event event;
+
+    bool playing = false; // Is the song playing?
+
+    const char *queue[] = {
+        "/home/ojace8143/media/music/Tool-10,000_Days/01.Vicarious.ogg",
+        "/home/ojace8143/media/music/Tool-10,000_Days/02.Jambi.ogg"
+    };
+
+    int queue_index = 0; // Queue position
+
+    // Initialize SDL
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("SDL_Init failed: %s", SDL_GetError());
         return 1;
     }
 
+    // Initialize SDL_mixer
     if (!MIX_Init()) {
         SDL_Log("MIX_Init failed: %s", SDL_GetError());
         SDL_Quit();
@@ -60,29 +75,11 @@ int main(void)
         SDL_Quit();
         return 1;
     }
-        // Load the goofy button sound
-        MIX_Audio *track_audio = MIX_LoadAudio(
-            mixer,
-            queue[queue_index],
-            true
-        );  // Check if the button sound loaded
 
-        if (track_audio == NULL) {
-            SDL_Log("MIX_LoadAudio failed: %s", SDL_GetError());
-            printf("Track not found!\n");
-            MIX_DestroyTrack(track);
-            SDL_DestroyRenderer(renderer);
-            SDL_DestroyWindow(window);
-            MIX_DestroyMixer(mixer);
-            MIX_Quit();
-            SDL_Quit();
-            return 1;
-        }
-
-    // Create a track for the button
+    // Create a track for the current song
     MIX_Track *track = MIX_CreateTrack(mixer);
 
-    // Check button track error
+    // Check track error
     if (track == NULL) {
         SDL_Log("MIX_CreateTrack failed: %s", SDL_GetError());
         SDL_DestroyRenderer(renderer);
@@ -92,7 +89,28 @@ int main(void)
         SDL_Quit();
         return 1;
     }
-      // Connect the sound to the track
+
+    // Load the current song
+    MIX_Audio *track_audio = MIX_LoadAudio(
+        mixer,
+        queue[queue_index],
+        true
+    );
+
+    // Check if the track loaded
+    if (track_audio == NULL) {
+        SDL_Log("MIX_LoadAudio failed: %s", SDL_GetError());
+        printf("Track not found!\n");
+        MIX_DestroyTrack(track);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        MIX_DestroyMixer(mixer);
+        MIX_Quit();
+        SDL_Quit();
+        return 1;
+    }
+
+    // Connect the audio to the track
     if (!MIX_SetTrackAudio(track, track_audio)) {
         SDL_Log("MIX_SetTrackAudio failed: %s", SDL_GetError());
         MIX_DestroyAudio(track_audio);
@@ -105,11 +123,10 @@ int main(void)
         return 1;
     }
 
-
-    int button_center = 150; // y value that buttons will be centered on
+    // Y value that buttons will be centered on
+    int button_center = 150;
 
     // Define a button
-    // Screen is 800x200 (note)
     SDL_FRect play_pause_button = {
         .x = (600 - 50) / 2,
         .y = button_center - 50 / 2,
@@ -118,7 +135,7 @@ int main(void)
     };
 
     SDL_FRect next_button = {
-        .x = play_pause_button.x + play_pause_button.w + 10, 
+        .x = play_pause_button.x + play_pause_button.w + 10,
         .y = button_center - 35 / 2,
         .w = 35,
         .h = 35
@@ -130,28 +147,18 @@ int main(void)
         .w = 35,
         .h = 35
     };
+
     // Sets window title
     SDL_SetWindowTitle(window, "ojace8143's music player");
 
-   // Variables
-    bool running = true;
-    SDL_Event event;
-
-    bool playing = false; // Is the song playing?
-    const char *queue[] = {
-        "/home/ojace8143/media/music/Tool-10,000_Days/01.Vicarious.ogg",
-        "/home/ojace8143/media/music/Tool-10,000_Days/02.Jambi.ogg"
-    };
-    int queue_index = 0; // Queue position
-
-     // Main loop
+    // Main loop
     while (running) {
 
         // Set background to black
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        // Set button to white
+        // Set buttons to white
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(renderer, &play_pause_button);
         SDL_RenderFillRect(renderer, &next_button);
@@ -182,7 +189,7 @@ int main(void)
                 float x = event.button.x;
                 float y = event.button.y;
 
-                // Check if the cursor is inside the button
+                // Play / pause button
                 if (x >= play_pause_button.x &&
                     x <= play_pause_button.x + play_pause_button.w &&
                     y >= play_pause_button.y &&
@@ -190,10 +197,10 @@ int main(void)
 
                     printf("you clicked the play pause button nice job\n");
 
-                    // Play the goofy sound
-                    // will soon be to toggle current sound
                     MIX_PlayTrack(track, 0);
                 }
+
+                // Next button
                 if (x >= next_button.x &&
                     x <= next_button.x + next_button.w &&
                     y >= next_button.y &&
@@ -201,6 +208,8 @@ int main(void)
 
                     printf("you clicked on the next button nice job\n");
                 }
+
+                // Previous button
                 if (x >= previous_button.x &&
                     x <= previous_button.x + previous_button.w &&
                     y >= previous_button.y &&
@@ -210,10 +219,6 @@ int main(void)
                 }
             }
         }
-
-        // Queue and audio
-
-
     }
 
     // Cleanup
