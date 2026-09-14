@@ -189,8 +189,11 @@ int main(void)
                     printf("you clicked on the next button nice job\n");
 
                     queue_index++;
+     
+                    MIX_DestroyTrack(track);
+                    MIX_DestroyAudio(track_audio);
 
-                    MIX_Track *track = create_track(
+                   MIX_Track *track = create_track(
                         mixer,
                         queue[queue_index],
                         &track_audio
@@ -208,6 +211,9 @@ int main(void)
                     printf("you clicked on the previous button nice job\n");
 
                     queue_index--;
+
+                    MIX_DestroyTrack(track);
+                    MIX_DestroyAudio(track_audio);
 
                     MIX_Track *track = create_track(
                         mixer,
