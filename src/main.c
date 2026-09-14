@@ -6,11 +6,7 @@
 
 int main(void)
 {
-    // Variables
-    bool running = true;
-    SDL_Event event;
-
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
+        if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("SDL_Init failed: %s", SDL_GetError());
         return 1;
     }
@@ -64,12 +60,30 @@ int main(void)
         SDL_Quit();
         return 1;
     }
+        // Load the goofy button sound
+        MIX_Audio *track_audio = MIX_LoadAudio(
+            mixer,
+            queue[queue_index],
+            true
+        );  // Check if the button sound loaded
+
+        if (track_audio == NULL) {
+            SDL_Log("MIX_LoadAudio failed: %s", SDL_GetError());
+            printf("Track not found!\n");
+            MIX_DestroyTrack(track);
+            SDL_DestroyRenderer(renderer);
+            SDL_DestroyWindow(window);
+            MIX_DestroyMixer(mixer);
+            MIX_Quit();
+            SDL_Quit();
+            return 1;
+        }
 
     // Create a track for the button
-    MIX_Track *button_track = MIX_CreateTrack(mixer);
+    MIX_Track *track = MIX_CreateTrack(mixer);
 
     // Check button track error
-    if (button_track == NULL) {
+    if (track == NULL) {
         SDL_Log("MIX_CreateTrack failed: %s", SDL_GetError());
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
@@ -78,31 +92,11 @@ int main(void)
         SDL_Quit();
         return 1;
     }
-
-    // Load the goofy button sound
-    MIX_Audio *button_sound = MIX_LoadAudio(
-        mixer,
-        "assets/goofy-sound-effects.mp3",
-        true
-    );
-
-    // Check if the button sound loaded
-    if (button_sound == NULL) {
-        SDL_Log("MIX_LoadAudio failed: %s", SDL_GetError());
-        MIX_DestroyTrack(button_track);
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        MIX_DestroyMixer(mixer);
-        MIX_Quit();
-        SDL_Quit();
-        return 1;
-    }
-
-    // Connect the sound to the track
-    if (!MIX_SetTrackAudio(button_track, button_sound)) {
+      // Connect the sound to the track
+    if (!MIX_SetTrackAudio(track, track_audio)) {
         SDL_Log("MIX_SetTrackAudio failed: %s", SDL_GetError());
-        MIX_DestroyAudio(button_sound);
-        MIX_DestroyTrack(button_track);
+        MIX_DestroyAudio(track_audio);
+        MIX_DestroyTrack(track);
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
         MIX_DestroyMixer(mixer);
@@ -139,7 +133,18 @@ int main(void)
     // Sets window title
     SDL_SetWindowTitle(window, "ojace8143's music player");
 
-    // Main loop
+   // Variables
+    bool running = true;
+    SDL_Event event;
+
+    bool playing = false; // Is the song playing?
+    const char *queue[] = {
+        "/home/ojace8143/media/music/Tool-10,000_Days/01.Vicarious.ogg",
+        "/home/ojace8143/media/music/Tool-10,000_Days/02.Jambi.ogg"
+    };
+    int queue_index = 0; // Queue position
+
+     // Main loop
     while (running) {
 
         // Set background to black
@@ -187,7 +192,7 @@ int main(void)
 
                     // Play the goofy sound
                     // will soon be to toggle current sound
-                    MIX_PlayTrack(button_track, 0);
+                    MIX_PlayTrack(track, 0);
                 }
                 if (x >= next_button.x &&
                     x <= next_button.x + next_button.w &&
@@ -205,11 +210,15 @@ int main(void)
                 }
             }
         }
+
+        // Queue and audio
+
+
     }
 
     // Cleanup
-    MIX_DestroyTrack(button_track);
-    MIX_DestroyAudio(button_sound);
+    MIX_DestroyTrack(track);
+    MIX_DestroyAudio(track_audio);
     MIX_DestroyMixer(mixer);
     MIX_Quit();
 
