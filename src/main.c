@@ -190,6 +190,12 @@ int main(void)
 
                     queue_index++;
 
+                    MIX_Track *track = create_track(
+                        mixer,
+                        queue[queue_index],
+                        &track_audio
+                    );
+
                     printf("Queue index: %d\n", queue_index);
                 }
 
@@ -202,6 +208,12 @@ int main(void)
                     printf("you clicked on the previous button nice job\n");
 
                     queue_index--;
+
+                    MIX_Track *track = create_track(
+                        mixer,
+                        queue[queue_index],
+                        &track_audio
+                    );
 
                     printf("Queue index: %d\n", queue_index);
                 }
