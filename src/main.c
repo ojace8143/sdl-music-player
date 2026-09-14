@@ -5,27 +5,25 @@
 #include "../config.h"
 
 int main(void)
-{
+{   
     // Variables
     bool running = true;
     SDL_Event event;
 
     bool playing = false; // Is the song playing?
-
     const char *queue[] = {
         "/home/ojace8143/media/music/Tool-10,000_Days/01.Vicarious.ogg",
         "/home/ojace8143/media/music/Tool-10,000_Days/02.Jambi.ogg"
     };
-
+    
     int queue_index = 0; // Queue position
 
-    // Initialize SDL
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
+
+        if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("SDL_Init failed: %s", SDL_GetError());
         return 1;
     }
 
-    // Initialize SDL_mixer
     if (!MIX_Init()) {
         SDL_Log("MIX_Init failed: %s", SDL_GetError());
         SDL_Quit();
@@ -76,57 +74,12 @@ int main(void)
         return 1;
     }
 
-    // Create a track for the current song
-    MIX_Track *track = MIX_CreateTrack(mixer);
+   create_track();
 
-    // Check track error
-    if (track == NULL) {
-        SDL_Log("MIX_CreateTrack failed: %s", SDL_GetError());
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        MIX_DestroyMixer(mixer);
-        MIX_Quit();
-        SDL_Quit();
-        return 1;
-    }
-
-    // Load the current song
-    MIX_Audio *track_audio = MIX_LoadAudio(
-        mixer,
-        queue[queue_index],
-        true
-    );
-
-    // Check if the track loaded
-    if (track_audio == NULL) {
-        SDL_Log("MIX_LoadAudio failed: %s", SDL_GetError());
-        printf("Track not found!\n");
-        MIX_DestroyTrack(track);
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        MIX_DestroyMixer(mixer);
-        MIX_Quit();
-        SDL_Quit();
-        return 1;
-    }
-
-    // Connect the audio to the track
-    if (!MIX_SetTrackAudio(track, track_audio)) {
-        SDL_Log("MIX_SetTrackAudio failed: %s", SDL_GetError());
-        MIX_DestroyAudio(track_audio);
-        MIX_DestroyTrack(track);
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        MIX_DestroyMixer(mixer);
-        MIX_Quit();
-        SDL_Quit();
-        return 1;
-    }
-
-    // Y value that buttons will be centered on
-    int button_center = 150;
+   int button_center = 150; // y value that buttons will be centered on
 
     // Define a button
+    // Screen is 800x200 (note)
     SDL_FRect play_pause_button = {
         .x = (600 - 50) / 2,
         .y = button_center - 50 / 2,
@@ -135,7 +88,7 @@ int main(void)
     };
 
     SDL_FRect next_button = {
-        .x = play_pause_button.x + play_pause_button.w + 10,
+        .x = play_pause_button.x + play_pause_button.w + 10, 
         .y = button_center - 35 / 2,
         .w = 35,
         .h = 35
@@ -147,18 +100,17 @@ int main(void)
         .w = 35,
         .h = 35
     };
-
     // Sets window title
     SDL_SetWindowTitle(window, "ojace8143's music player");
 
-    // Main loop
+     // Main loop
     while (running) {
 
         // Set background to black
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        // Set buttons to white
+        // Set button to white
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(renderer, &play_pause_button);
         SDL_RenderFillRect(renderer, &next_button);
@@ -189,7 +141,7 @@ int main(void)
                 float x = event.button.x;
                 float y = event.button.y;
 
-                // Play / pause button
+                // Check if the cursor is inside the button
                 if (x >= play_pause_button.x &&
                     x <= play_pause_button.x + play_pause_button.w &&
                     y >= play_pause_button.y &&
@@ -197,28 +149,33 @@ int main(void)
 
                     printf("you clicked the play pause button nice job\n");
 
+                    // Play the goofy sound
+                    // will soon be to toggle current sound
                     MIX_PlayTrack(track, 0);
                 }
-
-                // Next button
                 if (x >= next_button.x &&
                     x <= next_button.x + next_button.w &&
                     y >= next_button.y &&
                     y <= next_button.y + next_button.h) {
 
                     printf("you clicked on the next button nice job\n");
+                    queue_index++;
+                    printf("%d\n", queue_index);
                 }
-
-                // Previous button
                 if (x >= previous_button.x &&
                     x <= previous_button.x + previous_button.w &&
                     y >= previous_button.y &&
                     y <= previous_button.y + previous_button.h) {
 
                     printf("you clicked on the previous button nice job\n");
+                    queue_index--;
+                    printf("%d\n", queue_index);
                 }
             }
         }
+
+        // Queue and audio
+
     }
 
     // Cleanup
@@ -232,4 +189,50 @@ int main(void)
     SDL_Quit();
 
     return 0;
+}
+
+void create_track() {
+        MIX_Audio *track_audio = MIX_LoadAudio(
+            mixer,
+            queue[queue_index],
+            true
+        );  // Check if the button sound loaded
+
+        // Create a track for the button
+        MIX_Track *track = MIX_CreateTrack(mixer);
+
+        if (track_audio == NULL) {
+            SDL_Log("MIX_LoadAudio failed: %s", SDL_GetError());
+            printf("Track not found!\n");
+            MIX_DestroyTrack(track);
+            SDL_DestroyRenderer(renderer);
+            SDL_DestroyWindow(window);
+            MIX_DestroyMixer(mixer);
+            MIX_Quit();
+            SDL_Quit();
+            return 1;
+        }
+
+    // Check button track error
+    if (track == NULL) {
+        SDL_Log("MIX_CreateTrack failed: %s", SDL_GetError());
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        MIX_DestroyMixer(mixer);
+        MIX_Quit();
+        SDL_Quit();
+        return 1;
+    }
+      // Connect the sound to the track
+    if (!MIX_SetTrackAudio(track, track_audio)) {
+        SDL_Log("MIX_SetTrackAudio failed: %s", SDL_GetError());
+        MIX_DestroyAudio(track_audio);
+        MIX_DestroyTrack(track);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        MIX_DestroyMixer(mixer);
+        MIX_Quit();
+        SDL_Quit();
+        return 1;
+    }
 }
