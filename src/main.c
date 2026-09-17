@@ -18,6 +18,7 @@ int main(void)
     SDL_Event event;
 
     bool playing = false; // Is the song playing?
+    bool first_play = true;
 
     const char *queue[] = {
         "/home/ojace8143/media/music/Tool-10,000_Days/01.Vicarious.ogg",
@@ -176,8 +177,17 @@ int main(void)
 
                     printf("you clicked the play pause button nice job\n");
 
-                    // Will become play/pause functionality
-                    MIX_PlayTrack(track, 0);
+                    // PLay pause functionality
+                    if (first_play) {
+                        MIX_PlayTrack(track, 0);
+                        first_play = false;
+                    } else if (playing) {
+                        MIX_ResumeTrack(track);
+                    } else {
+                        MIX_PauseTrack(track);
+                    }
+
+                    playing = !playing;
                 }
 
                 // Next button
@@ -193,11 +203,13 @@ int main(void)
                     MIX_DestroyTrack(track);
                     MIX_DestroyAudio(track_audio);
 
-                   MIX_Track *track = create_track(
-                        mixer,
-                        queue[queue_index],
-                        &track_audio
-                    );
+                    MIX_Track *track = create_track(
+                         mixer,
+                         queue[queue_index],
+                         &track_audio
+                     );
+
+                    MIX_PlayTrack(track, 0);
 
                     printf("Queue index: %d\n", queue_index);
                 }
@@ -220,6 +232,8 @@ int main(void)
                         queue[queue_index],
                         &track_audio
                     );
+
+                    MIX_PlayTrack(track, 0);
 
                     printf("Queue index: %d\n", queue_index);
                 }
