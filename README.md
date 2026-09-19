@@ -12,6 +12,8 @@ just for personal use so I (and you) don't have to deal with online services lik
 - [ ] Create basic UI
 - [ ] Create UI Assets
 - [ ] Functionality
+- [ ] song progress bar
+- [ ] show song title and metadata
 - [ ] add more stuff todo later
 
 ## Currently working on
