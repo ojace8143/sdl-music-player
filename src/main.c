@@ -177,17 +177,18 @@ int main(void)
 
                     printf("you clicked the play pause button nice job\n");
 
-                    // PLay pause functionality
+                    // Play pause functionality
                     if (first_play) {
                         MIX_PlayTrack(track, 0);
+                        playing = true;
                         first_play = false;
                     } else if (playing) {
-                        MIX_ResumeTrack(track);
-                    } else {
                         MIX_PauseTrack(track);
+                        playing = false;
+                    } else {
+                        MIX_ResumeTrack(track);
+                        playing = true;
                     }
-
-                    playing = !playing;
                 }
 
                 // Next button
@@ -210,6 +211,7 @@ int main(void)
                      );
 
                     MIX_PlayTrack(track, 0);
+                    playing = true;
 
                     printf("Queue index: %d\n", queue_index);
                 }
@@ -234,6 +236,7 @@ int main(void)
                     );
 
                     MIX_PlayTrack(track, 0);
+                    playing = true;
 
                     printf("Queue index: %d\n", queue_index);
                 }
