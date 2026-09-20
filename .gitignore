@@ -1,3 +1,7 @@
+# compiled things
 music-player
 sdl-music-player
 *.o
+
+# my git script
+setup-git.sh

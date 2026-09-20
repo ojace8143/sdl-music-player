@@ -23,3 +23,6 @@ functionality. my dad also has an old tool cd (10,000 days), so i'm using that a
 woah sdl so cool
 
 my code is shitty i know 
+test commit from omarchy
+
+and yes i use omarchy ooh omarchy linux buzz word oohh

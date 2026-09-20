@@ -26,6 +26,7 @@ int main(void)
     };
 
     int queue_index = 0; // Queue position
+    int queue_size = sizeof(queue) / sizeof(queue[0]);
 
     // Initialize SDL
     if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -199,21 +200,33 @@ int main(void)
 
                     printf("you clicked on the next button nice job\n");
 
-                    queue_index++;
-     
-                    MIX_DestroyTrack(track);
-                    MIX_DestroyAudio(track_audio);
+                    int new_index = (queue_index + 1) % queue_size;
 
-                    MIX_Track *track = create_track(
-                         mixer,
-                         queue[queue_index],
-                         &track_audio
-                     );
+                    MIX_Audio *new_audio = NULL;
+                    MIX_Track *new_track = create_track(
+                        mixer,
+                        queue[new_index],
+                        &new_audio
+                    );
 
-                    MIX_PlayTrack(track, 0);
-                    playing = true;
+                    if (new_track == NULL) {
+                        printf("Failed to load \"%s\"\n", queue[new_index]);
+                    } else {
+                        queue_index = new_index;
 
-                    printf("Queue index: %d\n", queue_index);
+                        MIX_DestroyTrack(track);
+                        MIX_DestroyAudio(track_audio);
+
+                        track = new_track;
+                        track_audio = new_audio;
+
+                        MIX_PlayTrack(track, 0);
+
+                        playing = true;
+                        first_play = false;
+
+                        printf("Queue index: %d\n", queue_index);
+                    }
                 }
 
                 // Previous button
@@ -224,24 +237,38 @@ int main(void)
 
                     printf("you clicked on the previous button nice job\n");
 
-                    queue_index--;
+                    int new_index = (queue_index - 1 + queue_size) % queue_size;
 
-                    MIX_DestroyTrack(track);
-                    MIX_DestroyAudio(track_audio);
-
-                    MIX_Track *track = create_track(
+                    MIX_Audio *new_audio = NULL;
+                    MIX_Track *new_track = create_track(
                         mixer,
-                        queue[queue_index],
-                        &track_audio
+                        queue[new_index],
+                        &new_audio
                     );
 
-                    MIX_PlayTrack(track, 0);
-                    playing = true;
+                    if (new_track == NULL) {
+                        printf("Failed to load \"%s\"\n", queue[new_index]);
+                    } else {
+                        queue_index = new_index;
 
-                    printf("Queue index: %d\n", queue_index);
+                        MIX_DestroyTrack(track);
+                        MIX_DestroyAudio(track_audio);
+
+                        track = new_track;
+                        track_audio = new_audio;
+
+                        MIX_PlayTrack(track, 0);
+
+                        playing = true;
+                        first_play = false;
+
+                        printf("Queue index: %d\n", queue_index);
+                    }
                 }
             }
         }
+
+        SDL_Delay(16); // Cap at ~60 FPS
     }
 
     // Cleanup
