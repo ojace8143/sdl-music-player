@@ -65,7 +65,7 @@ int main(void)
         return 1;
     }
 
-    // Create a window
+    /// Create a window
     SDL_Window *window = SDL_CreateWindow(
         "ojace8143's music player",
         600,
@@ -95,6 +95,10 @@ int main(void)
         return 1;
     }
 
+    // Enable Vsync if available
+    if (!SDL_SetRenderVSync(renderer, 1)) {
+    SDL_Log("SDL_SetRenderVSync Vsync unavailable: %s", SDL_GetError());
+    }
     // Load the current song and create its track
     MIX_Audio *track_audio = NULL;
 
@@ -139,8 +143,6 @@ int main(void)
         .h = 35
     };
 
-    // Sets window title
-    SDL_SetWindowTitle(window, "ojace8143's music player");
 
     // Main loop
     while (running) {
@@ -278,7 +280,6 @@ int main(void)
             }
         }
 
-        SDL_Delay(16); // Cap at ~60 FPS
     }
 
     // Cleanup
@@ -305,7 +306,7 @@ MIX_Track *create_track(
     *track_audio = MIX_LoadAudio(
         mixer,
         filename,
-        true
+        false
     );
 
     // Check if audio loaded
