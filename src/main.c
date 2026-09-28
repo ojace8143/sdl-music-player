@@ -21,8 +21,18 @@ int main(void)
     bool first_play = true;
 
     const char *queue[] = {
-        "/home/ojace8143/media/music/Tool-10,000_Days/01.Vicarious.ogg",
-        "/home/ojace8143/media/music/Tool-10,000_Days/02.Jambi.ogg"
+        "/home/ojace8143/Music/Tool-10,000_Days/01.Vicarious.ogg",
+        "/home/ojace8143/Music/Tool-10,000_Days/02.Jambi.ogg",
+        "/home/ojace8143/Music/Tool-10,000_Days/03.Wings_for_Marie,_Pt_1.ogg",
+        "/home/ojace8143/Music/Tool-10,000_Days/04.10,000_Days_(Wings,_Pt_2).ogg",
+        "/home/ojace8143/Music/Tool-10,000_Days/05.The_Pot.ogg",
+        "/home/ojace8143/Music/Tool-10,000_Days/06.Lipan_Conjuring.ogg",
+        "/home/ojace8143/Music/Tool-10,000_Days/07.Lost_Keys_(Blame_Hofmann).ogg",
+        "/home/ojace8143/Music/Tool-10,000_Days/08.Rosetta_Stoned.ogg",
+        "/home/ojace8143/Music/Tool-10,000_Days/09.Intension.ogg",
+        "/home/ojace8143/Music/Tool-10,000_Days/10.Right_in_Two.ogg",
+        "/home/ojace8143/Music/Tool-10,000_Days/11.Viginti_Tres.ogg"
+
     };
 
     int queue_index = 0; // Queue position
