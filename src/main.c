@@ -32,7 +32,6 @@ int main(void)
         "/home/ojace8143/Music/Tool-10,000_Days/09.Intension.ogg",
         "/home/ojace8143/Music/Tool-10,000_Days/10.Right_in_Two.ogg",
         "/home/ojace8143/Music/Tool-10,000_Days/11.Viginti_Tres.ogg"
-
     };
 
     int queue_index = 0; // Queue position
