@@ -300,39 +300,50 @@ int main(void)
               if (button_hit(play_pause_button, x, y)) {
 
                   printf("you clicked the play pause button nice job\n");
-
+          
+                  SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
+                  const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
+ 
                   // A track that was loaded but never started is neither
                   // playing nor paused, so this handles the first press too
                   if (MIX_TrackPaused(player.track)) {
                       MIX_ResumeTrack(player.track);
+                      printf("Playing Track: %s\n", title);
                   } else if (MIX_TrackPlaying(player.track)) {
                       MIX_PauseTrack(player.track);
+                      printf("Paused Track: %s\n", title);
                   } else {
                       MIX_PlayTrack(player.track, 0);
+                      printf("Playing track: %s\n", title);
                   }
 
-                  SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
-                  const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
-                  printf("Track Title: %s\n", title);
               }
 
               // Next button
               if (button_hit(next_button, x, y)) {
                   printf("you clicked on the next button nice job\n");
                   player_skip(&player, 1);
+
+                  SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
+                  const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
+                  printf("Track Title: %s\n", title);
               }
 
               // Previous button
               if (button_hit(previous_button, x, y)) {
                   printf("you clicked on the previous button nice job\n");
                   player_skip(&player, -1);
+
+                  SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
+                  const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
+                  printf("Track Title: %s\n", title);
               }
           }
       }
 
   }
 
-  // Cleanup
+// Cleanup
 cleanup:
   player_destroy(&player);
 
