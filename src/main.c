@@ -262,7 +262,7 @@ int main(void)
       player_reap(&player);
 
       // Set background to black
-      SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+      SDL_SetRenderDrawColor(renderer, 112, 128, 144, 255);
       SDL_RenderClear(renderer);
 
       // Set buttons to white
