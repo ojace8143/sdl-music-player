@@ -9,7 +9,7 @@ clone it\
 `git clone https://github.com/ojace8143/sdl-music-player.git`
 
 compile it\
-`./compile`
+`./compile`\
 or:\
 `gcc -o sdl-music-player src/main.c $(pkg-config --cflags --libs sdl3-mixer)`
 
