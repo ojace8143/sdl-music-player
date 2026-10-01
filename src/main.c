@@ -2,10 +2,7 @@
 #include <SDL3_mixer/SDL_mixer.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "../config.h"
-
-// How long the track takes to fade out in milliseconds
-#define FADE_OUT_MS 50
+#include "config.h"
 
 typedef struct {
     MIX_Mixer   *mixer;
@@ -152,17 +149,7 @@ int main(void)
   SDL_Renderer *renderer = NULL;
 
   const char *queue[] = {
-      "/home/ojace8143/Music/Tool-10,000_Days/01.Vicarious.ogg",
-      "/home/ojace8143/Music/Tool-10,000_Days/02.Jambi.ogg",
-      "/home/ojace8143/Music/Tool-10,000_Days/03.Wings_for_Marie,_Pt_1.ogg",
-      "/home/ojace8143/Music/Tool-10,000_Days/04.10,000_Days_(Wings,_Pt_2).ogg",
-      "/home/ojace8143/Music/Tool-10,000_Days/05.The_Pot.ogg",
-      "/home/ojace8143/Music/Tool-10,000_Days/06.Lipan_Conjuring.ogg",
-      "/home/ojace8143/Music/Tool-10,000_Days/07.Lost_Keys_(Blame_Hofmann).ogg",
-      "/home/ojace8143/Music/Tool-10,000_Days/08.Rosetta_Stoned.ogg",
-      "/home/ojace8143/Music/Tool-10,000_Days/09.Intension.ogg",
-      "/home/ojace8143/Music/Tool-10,000_Days/10.Right_in_Two.ogg",
-      "/home/ojace8143/Music/Tool-10,000_Days/11.Viginti_Tres.ogg"
+      MUSIC_QUEUE
   };
 
   // The rest of main talks to the player through this
@@ -198,9 +185,9 @@ int main(void)
 
   /// Create a window
   window = SDL_CreateWindow(
-      "ojace8143's music player",
-      600,
-      200,
+      WINDOW_TITLE,
+      WINDOW_WIDTH,
+      WINDOW_HEIGHT,
       0
   );
 
@@ -230,28 +217,28 @@ int main(void)
       goto cleanup;
   }
 
-  int button_center = 150; // y value that buttons will be centered on
+  int button_center = BUTTON_CENTER_Y; // y value that buttons will be centered on
 
   // Define the buttons
   SDL_FRect play_pause_button = {
-      .x = (600 - 50) / 2,
-      .y = button_center - 50 / 2,
-      .w = 50,
-      .h = 50
+      .x = (WINDOW_WIDTH - PLAY_PAUSE_SIZE) / 2,
+      .y = button_center - PLAY_PAUSE_SIZE / 2,
+      .w = PLAY_PAUSE_SIZE,
+      .h = PLAY_PAUSE_SIZE
   };
 
   SDL_FRect next_button = {
-      .x = play_pause_button.x + play_pause_button.w + 10,
-      .y = button_center - 35 / 2,
-      .w = 35,
-      .h = 35
+      .x = play_pause_button.x + play_pause_button.w + BUTTON_GAP,
+      .y = button_center - SKIP_BUTTON_SIZE / 2,
+      .w = SKIP_BUTTON_SIZE,
+      .h = SKIP_BUTTON_SIZE
   };
 
   SDL_FRect previous_button = {
-      .x = play_pause_button.x - 35 - 10,
-      .y = button_center - 35 / 2,
-      .w = 35,
-      .h = 35
+      .x = play_pause_button.x - SKIP_BUTTON_SIZE - BUTTON_GAP,
+      .y = button_center - SKIP_BUTTON_SIZE / 2,
+      .w = SKIP_BUTTON_SIZE,
+      .h = SKIP_BUTTON_SIZE
   };
 
 
@@ -262,11 +249,11 @@ int main(void)
       player_reap(&player);
 
       // Set background to black
-      SDL_SetRenderDrawColor(renderer, 112, 128, 144, 255);
+      SDL_SetRenderDrawColor(renderer, COLOR_BACKGROUND);
       SDL_RenderClear(renderer);
 
       // Set buttons to white
-      SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+      SDL_SetRenderDrawColor(renderer, COLOR_BUTTON);
       SDL_RenderFillRect(renderer, &play_pause_button);
       SDL_RenderFillRect(renderer, &next_button);
       SDL_RenderFillRect(renderer, &previous_button);
@@ -297,7 +284,7 @@ int main(void)
               float y = event.button.y;
 
               // Play / pause button
-              if (button_hit(play_pause_button, x, y)) {
+              if (button_hit(play_pause_button, x, y) || (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_SPACE)) {
 
                   printf("you clicked the play pause button nice job\n");
           
