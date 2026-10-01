@@ -4,7 +4,7 @@
 #include <SDL3/SDL.h>
 
 // Window settings
-#define WINDOW_TITLE "ojace8143's music player"
+#define WINDOW_TITLE "ojace8143's music playerrrrr3"
 #define WINDOW_WIDTH  600
 #define WINDOW_HEIGHT 200
 

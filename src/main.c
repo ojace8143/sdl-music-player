@@ -245,88 +245,92 @@ int main(void)
   // Main loop
   while (running) {
 
-      // Stop hanging on to a song that finished fading out
-      player_reap(&player);
+    // Stop hanging on to a song that finished fading out
+    player_reap(&player);
 
-      // Set background to black
-      SDL_SetRenderDrawColor(renderer, COLOR_BACKGROUND);
-      SDL_RenderClear(renderer);
+    bool space_pressed;
+    space_pressed = false;
+    // Set background to black
+    SDL_SetRenderDrawColor(renderer, COLOR_BACKGROUND);
+    SDL_RenderClear(renderer);
 
-      // Set buttons to white
-      SDL_SetRenderDrawColor(renderer, COLOR_BUTTON);
-      SDL_RenderFillRect(renderer, &play_pause_button);
-      SDL_RenderFillRect(renderer, &next_button);
-      SDL_RenderFillRect(renderer, &previous_button);
+    // Set buttons to white
+    SDL_SetRenderDrawColor(renderer, COLOR_BUTTON);
+    SDL_RenderFillRect(renderer, &play_pause_button);
+    SDL_RenderFillRect(renderer, &next_button);
+    SDL_RenderFillRect(renderer, &previous_button);
 
-      SDL_RenderPresent(renderer);
+    SDL_RenderPresent(renderer);
 
-      // Event loop
-      while (SDL_PollEvent(&event)) {
+    // Event loop
+    while (SDL_PollEvent(&event)) {
 
-          if (event.type == SDL_EVENT_QUIT) {
-              running = false;
-          }
-
-          if (event.type == SDL_EVENT_KEY_DOWN) {
-              printf("a key was pressed wow so impressive\n");
-
-              if (event.key.key == SDLK_ESCAPE) {
-                  running = false;
-              }
-
-              if (event.key.key == SDLK_SPACE) {
-                  printf("you pressed space nice job lil bro\n");
-              }
-          }
-
-          if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-              float x = event.button.x;
-              float y = event.button.y;
-
-              // Play / pause button
-              if (button_hit(play_pause_button, x, y) || (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_SPACE)) {
-
-                  printf("you clicked the play pause button nice job\n");
-          
-                  SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
-                  const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
- 
-                  // A track that was loaded but never started is neither
-                  // playing nor paused, so this handles the first press too
-                  if (MIX_TrackPaused(player.track)) {
-                      MIX_ResumeTrack(player.track);
-                      printf("Playing Track: %s\n", title);
-                  } else if (MIX_TrackPlaying(player.track)) {
-                      MIX_PauseTrack(player.track);
-                      printf("Paused Track: %s\n", title);
-                  } else {
-                      MIX_PlayTrack(player.track, 0);
-                      printf("Playing track: %s\n", title);
-                  }
-
-              }
-
-              // Next button
-              if (button_hit(next_button, x, y)) {
-                  printf("you clicked on the next button nice job\n");
-                  player_skip(&player, 1);
-
-                  SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
-                  const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
-                  printf("Track Title: %s\n", title);
-              }
-
-              // Previous button
-              if (button_hit(previous_button, x, y)) {
-                  printf("you clicked on the previous button nice job\n");
-                  player_skip(&player, -1);
-
-                  SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
-                  const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
-                  printf("Track Title: %s\n", title);
-              }
-          }
+      if (event.type == SDL_EVENT_QUIT) {
+        running = false;
       }
+
+      if (event.type == SDL_EVENT_KEY_DOWN) {
+
+        printf("keypress\n");
+
+        if (event.key.key == SDLK_ESCAPE) {
+            running = false;
+        }
+
+        if (event.key.key == SDLK_SPACE) {
+            printf("you pressed space\n");
+            bool space_pressed = true;
+        }
+    }
+
+      if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+        float x = event.button.x;
+        float y = event.button.y;
+
+        // Play / pause button
+        if (button_hit(play_pause_button, x, y) || space_pressed) {
+
+            printf("you clicked the play pause button nice job\n");
+    
+            SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
+            const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
+
+            // A track that was loaded but never started is neither
+            // playing nor paused, so this handles the first press too
+            if (MIX_TrackPaused(player.track)) {
+                MIX_ResumeTrack(player.track);
+                printf("Playing Track: %s\n", title);
+            } else if (MIX_TrackPlaying(player.track)) {
+                MIX_PauseTrack(player.track);
+                printf("Paused Track: %s\n", title);
+            } else {
+                MIX_PlayTrack(player.track, 0);
+                printf("Playing track: %s\n", title);
+            }
+
+          }
+
+          // Next button
+          if (button_hit(next_button, x, y)) {
+            printf("you clicked on the next button nice job\n");
+            player_skip(&player, 1);
+
+            SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
+            const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
+            printf("Track Title: %s\n", title);
+        }
+
+          // Previous button
+          if (button_hit(previous_button, x, y)) {
+            printf("you clicked on the previous button nice job\n");
+            player_skip(&player, -1);
+
+            SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
+            const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
+            printf("Track Title: %s\n", title);
+        }
+      }
+  }
 
   }
 
@@ -335,15 +339,15 @@ cleanup:
   player_destroy(&player);
 
   if (player.mixer != NULL) {
-      MIX_DestroyMixer(player.mixer);
+    MIX_DestroyMixer(player.mixer);
   }
   MIX_Quit();
 
   if (renderer != NULL) {
-      SDL_DestroyRenderer(renderer);
+    SDL_DestroyRenderer(renderer);
   }
   if (window != NULL) {
-      SDL_DestroyWindow(window);
+    SDL_DestroyWindow(window);
   }
   SDL_Quit();
 
