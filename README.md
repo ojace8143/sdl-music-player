@@ -5,18 +5,21 @@ just for personal use so I (and you) don't have to deal with online services lik
 
 ## How to compile
 
-clone it  
+clone it\
 `git clone https://github.com/ojace8143/sdl-music-player.git`
 
-compile it 
+compile it\
 `./compile`
-or
+or:\
 `gcc -o sdl-music-player src/main.c $(pkg-config --cflags --libs sdl3-mixer)`
 
-then run it
+then run it\
 `./sdl-music-player`
 
-if you change anything in config.h, recompile, then run `./sdl-music-player'` and it should work
+if you change anything in config.h, recompile, then run `./sdl-music-player` and it should work
+
+## how to use it 
+Compile with the steps above, then run. "esc" quits, and space will be play/pause, arrow keys to skip a track or go back one track. The keybinds are hardcoded right now, but I'll change it so that it uses config.h soon.
 
 ## TODO List
 - [x] Get a window
@@ -33,7 +36,9 @@ if you change anything in config.h, recompile, then run `./sdl-music-player'` an
 - [ ] clean up structure and redundant code
 
 ## Currently working on
-functionality. my dad also has an old tool cd (10,000 days), so i'm using that as the testing audio tracks.
+finishing funtionaility.
 
 ## Notes
 keybinds not working rn
+
+my dad also has a tool cd (10,000 days), so I'm using that as the testing audio tracks.
