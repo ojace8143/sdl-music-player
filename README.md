@@ -35,7 +35,7 @@ Compile with the steps above, then run. "esc" quits, and space will be play/paus
 - [x] add more stuff todo later
 - [ ] clean up structure and redundant code
 - [ ] make, so you can `make clean install` instead of having to compile and run it from the anything0
-- [ ] think of a better name (openplayey????)
+- [ ] think of a better name (openplayer????)
 
 ## Currently working on
 making assets, finishing extra stuff
