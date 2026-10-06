@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # gcc compile command
-gcc -o sdl-music-player src/main.c $(pkg-config --cflags --libs sdl3-mixer)
+gcc -o sdl-music-player src/main.c $(pkg-config --cflags --libs sdl3-mixer sdl3-ttf)

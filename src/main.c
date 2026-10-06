@@ -16,6 +16,8 @@ typedef struct {
     int          index;
 } Player;
 
+TTF_Font *global_font = NULL;
+
 // Creates a track and loads the audio
 static MIX_Track *create_track(MIX_Mixer *mixer, const char *filename)
 {
@@ -165,6 +167,15 @@ int main(int argc, char* argv[])
       return 1;
   }
 
+  // Init SDL3_ttf
+  TTF_Init();
+  TTF_TextEngine *text_engine = TTF_CreateRendererTextEngine(renderer);
+  global_font = TTF_OpenFont(FONT_PATH, FONT_SIZE);
+  if (!global_font) {
+    SDL_Log("Font failed to load: %s:", SDL_GetError());
+    return 1;
+  }
+
   // Initialize SDL_mixer
   if (!MIX_Init()) {
       SDL_Log("MIX_Init failed: %s", SDL_GetError());
@@ -262,6 +273,12 @@ int main(int argc, char* argv[])
     SDL_RenderFillRect(renderer, &previous_button);
 
     SDL_RenderPresent(renderer);
+ 
+    SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
+    const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
+    const char *artist = SDL_GetStringProperty(props, MIX_PROP_METADATA_ARTIST_STRING, "Unknown Artist");
+    TTF_Text *track_text = TTF_CreateText(text_engine, global_font, title, 0);
+    TTF_DrawRendererText(track_text, 50.0f, 50.0f);
 
     // Event loop
     while (SDL_PollEvent(&event)) {

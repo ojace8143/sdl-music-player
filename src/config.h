@@ -19,7 +19,7 @@
 #define BUTTON_GAP       10
 
 // Text
-#define FONT_DIR  "../assets/font/Roboto-Regular.ttf"
+#define FONT_PATH  "assets/font/Roboto-Regular.ttf"
 #define FONT_SIZE 24.0f
 
 // Track fade in ms
