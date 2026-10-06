@@ -294,18 +294,21 @@ int main(void)
     
             SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
             const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
+            const char *artist = SDL_GetStringProperty(props, MIX_PROP_METADATA_ARTIST_STRING, "Unknown Artist");
 
             // A track that was loaded but never started is neither
             // playing nor paused, so this handles the first press too
             if (MIX_TrackPaused(player.track)) {
                 MIX_ResumeTrack(player.track);
                 printf("Playing Track: %s\n", title);
+                printf("Artist: %s\n", artist);
             } else if (MIX_TrackPlaying(player.track)) {
                 MIX_PauseTrack(player.track);
                 printf("Paused Track: %s\n", title);
             } else {
                 MIX_PlayTrack(player.track, 0);
                 printf("Playing track: %s\n", title);
+                printf("Artist: %s\n", artist);
             }
 
           }
@@ -317,7 +320,9 @@ int main(void)
 
             SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
             const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
+            const char *artist = SDL_GetStringProperty(props, MIX_PROP_METADATA_ARTIST_STRING, "Unknown Artist");
             printf("Track Title: %s\n", title);
+            printf("Artist: %s\n", artist);
         }
 
           // Previous button
@@ -327,7 +332,9 @@ int main(void)
 
             SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
             const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
+            const char *artist = SDL_GetStringProperty(props, MIX_PROP_METADATA_ARTIST_STRING, "Unknown Artist");
             printf("Track Title: %s\n", title);
+            printf("Artist: %s\n", artist);
         }
       }
   }
