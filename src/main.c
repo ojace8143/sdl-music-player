@@ -2,6 +2,7 @@
 #include <SDL3_mixer/SDL_mixer.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include "config.h"
 
 typedef struct {
@@ -139,7 +140,7 @@ static bool button_hit(SDL_FRect r, float x, float y)
            y <= r.y + r.h;
 }
 
-int main(void)
+int main(int argc, char* argv[])
 {
   // Variables
   bool running = true;

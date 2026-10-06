@@ -8,7 +8,7 @@
 #define WINDOW_WIDTH  600
 #define WINDOW_HEIGHT 200
 
-// Colors                r,  g,    b,   a
+// Colors                r,   g,   b,   a
 #define COLOR_BACKGROUND 112, 128, 144, 255
 #define COLOR_BUTTON     255, 255, 255, 255
 
@@ -17,6 +17,10 @@
 #define PLAY_PAUSE_SIZE  50
 #define SKIP_BUTTON_SIZE 35
 #define BUTTON_GAP       10
+
+// Text
+#define FONT_DIR  "font.ttf"
+#define FONT_SIZE 24.0f
 
 // Track fade in ms
 #define FADE_OUT_MS 50
