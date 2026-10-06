@@ -34,11 +34,11 @@ Compile with the steps above, then run. "esc" quits, and space will be play/paus
 - [ ] show song title and metadata
 - [x] add more stuff todo later
 - [ ] clean up structure and redundant code
+- [ ] make, so you can `make clean install` instead of having to compile and run it from the anything0
+- [ ] think of a better name (openplayey????)
 
 ## Currently working on
-finishing funtionaility.
+making assets, finishing extra stuff
 
 ## Notes
-keybinds not working rn
-
-my dad also has a tool cd (10,000 days), so I'm using that as the testing audio tracks.
+my dad also has a tool cd (10,000 days), and its copyrighted so i cant put the actual audio in my projec
