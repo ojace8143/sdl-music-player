@@ -169,7 +169,7 @@ int main(int argc, char* argv[])
 
   // Init SDL3_ttf
   TTF_Init();
-  TTF_TextEngine *text_engine = TTF_CreateRendererTextEngine(renderer);
+  TTF_TextEngine *text_engine = NULL;
   global_font = TTF_OpenFont(FONT_PATH, FONT_SIZE);
   if (!global_font) {
     SDL_Log("Font failed to load: %s:", SDL_GetError());
@@ -215,6 +215,13 @@ int main(int argc, char* argv[])
   // Check if the renderer failed
   if (renderer == NULL) {
       SDL_Log("SDL_CreateRenderer failed: %s", SDL_GetError());
+      goto cleanup;
+  }
+
+  // The text engine needs the renderer, so it can only be created after it
+  text_engine = TTF_CreateRendererTextEngine(renderer);
+  if (text_engine == NULL) {
+      SDL_Log("TTF_CreateRendererTextEngine failed: %s", SDL_GetError());
       goto cleanup;
   }
 
@@ -272,13 +279,16 @@ int main(int argc, char* argv[])
     SDL_RenderFillRect(renderer, &next_button);
     SDL_RenderFillRect(renderer, &previous_button);
 
-    SDL_RenderPresent(renderer);
- 
     SDL_PropertiesID props = MIX_GetAudioProperties(player.audio);
     const char *title = SDL_GetStringProperty(props, MIX_PROP_METADATA_TITLE_STRING, "Unknown Title");
     const char *artist = SDL_GetStringProperty(props, MIX_PROP_METADATA_ARTIST_STRING, "Unknown Artist");
     TTF_Text *track_text = TTF_CreateText(text_engine, global_font, title, 0);
-    TTF_DrawRendererText(track_text, 50.0f, 50.0f);
+    if (track_text != NULL) {
+        TTF_DrawRendererText(track_text, 50.0f, 50.0f);
+        TTF_DestroyText(track_text);
+    }
+
+    SDL_RenderPresent(renderer);
 
     // Event loop
     while (SDL_PollEvent(&event)) {
