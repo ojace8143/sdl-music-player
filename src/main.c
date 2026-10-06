@@ -271,19 +271,17 @@ int main(void)
 
       if (event.type == SDL_EVENT_KEY_DOWN) {
 
-        printf("keypress\n");
-
         if (event.key.key == SDLK_ESCAPE) {
             running = false;
         }
 
         if (event.key.key == SDLK_SPACE) {
             printf("you pressed space\n");
-            bool space_pressed = true;
+            space_pressed = true;
         }
     }
 
-      if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+      if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN || event.type == SDL_EVENT_KEY_DOWN) {
         float x = event.button.x;
         float y = event.button.y;
 
