@@ -10,11 +10,12 @@ clone it\
 
 compile it\
 `./compile`\
-or:\
-`gcc -o sdl-music-player src/main.c $(pkg-config --cflags --libs sdl3-mixer)`
+or:
+`make`\
+(make install works too, then `sdl-music-player` will run from anywhere so long as `.local/bin` is in your PATH)
 
 then run it\
-`./sdl-music-player`
+`./sdl-music-player` or `sdl-music-player` if you did `make install`
 
 if you change anything in config.h, recompile, then run `./sdl-music-player` and it should work
 
@@ -34,7 +35,7 @@ Compile with the steps above, then run. "esc" quits, and space will be play/paus
 - [ ] show song title and metadata
 - [x] add more stuff todo later
 - [ ] clean up structure and redundant code
-- [ ] make, so you can `make clean install` instead of having to compile and run it from the anything0
+- [x] make, so you can `make clean install` instead of having to compile and run it from the anything0
 - [ ] think of a better name (openplayer????)
 
 ## Currently working on
